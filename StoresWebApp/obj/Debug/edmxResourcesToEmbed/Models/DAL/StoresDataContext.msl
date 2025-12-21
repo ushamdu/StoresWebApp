@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="BikeStoresModelStoreContainer" CdmEntityContainer="BikeStoresEntities">
+    <EntitySetMapping Name="Brands">
+      <EntityTypeMapping TypeName="BikeStoresModel.Brand">
+        <MappingFragment StoreEntitySet="Brands">
+          <ScalarProperty Name="Brand_Id" ColumnName="Brand_Id" />
+          <ScalarProperty Name="Brand_Name" ColumnName="Brand_Name" />
+          <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
+          <ScalarProperty Name="LastModifiedTs" ColumnName="LastModifiedTs" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Categories">
+      <EntityTypeMapping TypeName="BikeStoresModel.Category">
+        <MappingFragment StoreEntitySet="Categories">
+          <ScalarProperty Name="Category_Id" ColumnName="Category_Id" />
+          <ScalarProperty Name="Category_Name" ColumnName="Category_Name" />
+          <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
+          <ScalarProperty Name="LastModifiedTs" ColumnName="LastModifiedTs" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Customers">
+      <EntityTypeMapping TypeName="BikeStoresModel.Customer">
+        <MappingFragment StoreEntitySet="Customers">
+          <ScalarProperty Name="Customer_Id" ColumnName="Customer_Id" />
+          <ScalarProperty Name="First_Name" ColumnName="First_Name" />
+          <ScalarProperty Name="Last_Name" ColumnName="Last_Name" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Street" ColumnName="Street" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="State_Name" ColumnName="State_Name" />
+          <ScalarProperty Name="Zip_Code" ColumnName="Zip_Code" />
+          <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
+          <ScalarProperty Name="LastModifiedTs" ColumnName="LastModifiedTs" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Order_Items">
+      <EntityTypeMapping TypeName="BikeStoresModel.Order_Items">
+        <MappingFragment StoreEntitySet="Order_Items">
+          <ScalarProperty Name="Order_Id" ColumnName="Order_Id" />
+          <ScalarProperty Name="Item_Id" ColumnName="Item_Id" />
+          <ScalarProperty Name="Product_Id" ColumnName="Product_Id" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="List_Price" ColumnName="List_Price" />
+          <ScalarProperty Name="Discount" ColumnName="Discount" />
+          <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
+          <ScalarProperty Name="LastModifiedTs" ColumnName="LastModifiedTs" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Products">
+      <EntityTypeMapping TypeName="BikeStoresModel.Product">
+        <MappingFragment StoreEntitySet="Products">
+          <ScalarProperty Name="Product_Id" ColumnName="Product_Id" />
+          <ScalarProperty Name="Product_Name" ColumnName="Product_Name" />
+          <ScalarProperty Name="Brand_Id" ColumnName="Brand_Id" />
+          <ScalarProperty Name="Category_Id" ColumnName="Category_Id" />
+          <ScalarProperty Name="Model_Year" ColumnName="Model_Year" />
+          <ScalarProperty Name="List_Price" ColumnName="List_Price" />
+          <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
+          <ScalarProperty Name="LastModifiedTs" ColumnName="LastModifiedTs" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Staffs">
+      <EntityTypeMapping TypeName="BikeStoresModel.Staff">
+        <MappingFragment StoreEntitySet="Staffs">
+          <ScalarProperty Name="Staff_Id" ColumnName="Staff_Id" />
+          <ScalarProperty Name="First_Name" ColumnName="First_Name" />
+          <ScalarProperty Name="Last_Name" ColumnName="Last_Name" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="Store_Id" ColumnName="Store_Id" />
+          <ScalarProperty Name="Manager_Id" ColumnName="Manager_Id" />
+          <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
+          <ScalarProperty Name="LastModifiedTs" ColumnName="LastModifiedTs" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Stocks">
+      <EntityTypeMapping TypeName="BikeStoresModel.Stock">
+        <MappingFragment StoreEntitySet="Stocks">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Store_Id" ColumnName="Store_Id" />
+          <ScalarProperty Name="Product_Id" ColumnName="Product_Id" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
+          <ScalarProperty Name="LastModifiedTs" ColumnName="LastModifiedTs" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Stores">
+      <EntityTypeMapping TypeName="BikeStoresModel.Store">
+        <MappingFragment StoreEntitySet="Stores">
+          <ScalarProperty Name="Store_Id" ColumnName="Store_Id" />
+          <ScalarProperty Name="Store_Name" ColumnName="Store_Name" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Street" ColumnName="Street" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="State_Name" ColumnName="State_Name" />
+          <ScalarProperty Name="Zip_Code" ColumnName="Zip_Code" />
+          <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
+          <ScalarProperty Name="LastModifiedTs" ColumnName="LastModifiedTs" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Order_Status">
+      <EntityTypeMapping TypeName="BikeStoresModel.Order_Status">
+        <MappingFragment StoreEntitySet="Order_Status">
+          <ScalarProperty Name="LastModifiedTs" ColumnName="LastModifiedTs" />
+          <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
+          <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+          <ScalarProperty Name="Order_StatusId" ColumnName="Order_StatusId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Orders">
+      <EntityTypeMapping TypeName="BikeStoresModel.Order">
+        <MappingFragment StoreEntitySet="Orders">
+          <ScalarProperty Name="LastModifiedTs" ColumnName="LastModifiedTs" />
+          <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
+          <ScalarProperty Name="Staff_Id" ColumnName="Staff_Id" />
+          <ScalarProperty Name="Store_Id" ColumnName="Store_Id" />
+          <ScalarProperty Name="Shipped_Date" ColumnName="Shipped_Date" />
+          <ScalarProperty Name="Required_Date" ColumnName="Required_Date" />
+          <ScalarProperty Name="Order_Date" ColumnName="Order_Date" />
+          <ScalarProperty Name="Order_StatusId" ColumnName="Order_StatusId" />
+          <ScalarProperty Name="Customer_Id" ColumnName="Customer_Id" />
+          <ScalarProperty Name="Order_Id" ColumnName="Order_Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

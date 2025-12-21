@@ -1,0 +1,387 @@
+﻿
+@{
+    ViewBag.Title = "Staffs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>Staffs</h2>*@
+
+
+<div class="page-inner">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Staffs Details</h4>
+                </div>
+                <div class="card-body">
+                    <a id="btnAdd" class="btn btn-success" style="margin-bottom:10px;float:right;">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i> Add New
+                    </a>
+                    <div class="table-responsive">
+                        <table id="dtStaffs" class="display " style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>                                 
+                                    <th>Store Name</th>
+                                    <th>Manager First Name</th>
+                                    <th>Manager Last Name</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Add/Edit Staffs popup window*@
+<div id="dvStaffModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="hdrTitle">Add Staff</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- First Name -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="control-label">First Name</label>
+                        <input type="hidden" id="txtStaffId" value="0" />
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="txtFirstName" class="form-control" placeholder="Enter First Name" required />
+                    </div>
+                </div>
+
+                <!-- Last Name -->
+                <div class="row mt-md-3" style="margin-top:15px;">
+                    <div class="col-md-4">
+                        <label class="control-label">Last Name</label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="txtLastName" class="form-control" placeholder="Enter Last Name" required />
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="row mt-md-3" style="margin-top:15px;">
+                    <div class="col-md-4">
+                        <label class="control-label">Email</label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="txtEmail" class="form-control" placeholder="Enter Email" required />
+                        <div class="invalid-feedback">Enter a valid email address</div>
+                    </div>
+                </div>
+              
+                <!-- Phone -->
+                <div class="row mt-md-3" style="margin-top:15px;">
+                    <div class="col-md-4">
+                        <label class="control-label">Phone</label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="txtPhone" class="form-control" placeholder="Enter Phone Number" />
+                        <div class="invalid-feedback">Phone number is required</div>
+                    </div>
+                </div>
+
+                <!--Store Name-->
+                <div class="row mt-md-3" style="margin-top:15px;">
+                    <div class="col-md-4">
+                        <label class="control-label">Store Name</label>
+                    </div>
+                    <div class="col-md-6">
+                        <select id="ddlStore" class="form-control select2 clsStore"></select>
+                    </div>
+                </div>
+
+                <!-- Manager Name -->
+                <div class="row mt-md-3" style="margin-top:15px;">
+                    <div class="col-md-4">
+                        <label class="control-label">Manager Name</label>
+                    </div>
+                    <div class="col-md-6">
+                        <select id="ddlManager" class="form-control select2 clsMgr"></select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="btnSave" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+
+            $('#ddlStore').select2({
+                //   placeholder: 'Select Store',
+                closeOnSelect: true,
+                dropdownParent: $('#dvStaffModal'),
+                width: '100%'
+            });
+
+            $('#ddlManager').select2({
+                //  placeholder: 'Select Manager',
+                closeOnSelect: true,
+                dropdownParent: $('#dvStaffModal'),
+                width: '100%'
+            });
+
+            BindStaffs();
+        });
+
+        function BindStaffs() {
+          $.ajax({
+            url: '@Url.Action("GetAllStaffs", "Sales")',
+            type: 'GET',
+            success: function (response) {
+                console.log('Success : ', response.data);
+                var data = response.data;
+                if ($.fn.DataTable.isDataTable('#dtStaffs')) {
+                    $('#dtStaffs').DataTable().clear().destroy();
+                }
+
+                $('#dtStaffs tbody').empty();
+
+                data.forEach(function (item) {
+                    $('#dtStaffs tbody').append(`
+                        <tr>
+                            <td>${item.FirstName}</td>
+                            <td>${item.LastName}</td>
+                            <td>${item.Email}</td>
+                            <td>${item.Phone}</td>
+                            <td>${item.StoreName}</td>
+                            <td>${item.MgrFirstName}</td>
+                            <td>${item.MgrLastName}</td>
+                            <td>
+                                <button class ="btn btn-sm btn-info" onclick="EditStaff(${item.StaffId})">Edit</button>
+                                <button class ="btn btn-sm btn-danger" onclick="DeleteStaff(${item.StaffId})">Delete</button>
+                            </td>
+                        </tr>
+                    `);
+                });
+
+                $('#dtStaffs').DataTable();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+  function BindStores() {
+        $.ajax({
+        url: '@Url.Action("GetStores", "Delivery")',
+        type: 'GET',
+        success: function (response) {
+            console.log('Success : ', response.data);
+            var data = response.data;
+
+            $('#ddlStore').empty();
+            $('#ddlStore').append($('<option></option>').val('0').html('Select'));
+            $.each(data, function (key, item) {
+                $('#ddlStore').append($('<option></option>').val(item.StoreId).html(item.StoreName));
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+        });
+    }
+
+     function BindManagers() {
+            $.ajax({
+            url: '@Url.Action("GetStaffLookUp", "Sales")',
+            type: 'GET',
+            success: function (response) {
+                console.log('Success : ', response.data);
+                var data = response.data;
+
+                $('#ddlManager').empty();
+                $('#ddlManager').append($('<option></option>').val('0').html('Select'));
+                $.each(data, function (key, item) {
+                    $('#ddlManager').append($('<option></option>').val(item.StaffId).html(item.StaffName));
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+            });
+        }
+
+    $('.clsStore').on('change', function () {
+        if ($(this).val() && $(this).val() !== '0') {
+            clearSelect2Error($(this));
+        }
+    });
+
+    $('.clsMgr').on('change', function () {
+        if ($(this).val() && $(this).val() !== '0') {
+            clearSelect2Error($(this));
+        }
+    });
+
+    $('#btnAdd').click(function () {
+        clearForm();
+        BindStores();
+        BindManagers();
+
+        $('#hdrTitle').text('Add Staff');
+        $('#dvStaffModal').modal('show');
+    });
+
+    function clearForm() {
+        //  txtStaffId  txtFirstName txtLastName txtEmail txtPhone ddlStore ddlManager
+        $('#txtStaffId').val('');
+        $('#txtFirstName').val('');
+        $('#txtLastName').val('');
+        $('#txtEmail').val('');
+        $('#txtPhone').val('');
+        $('#ddlStore').val('0').trigger('change');
+        $('#ddlManager').val('0').trigger('change');
+        }
+
+     $('#btnSave').click(function () {
+        debugger;
+
+        var flag = ValidateStaff();
+        if (!flag)
+            return;
+         //  txtStaffId  txtFirstName txtLastName txtEmail txtPhone ddlStore ddlManager
+        var staff = {
+            staffId: $('#txtStaffId').val(),
+            firstName: $('#txtFirstName').val(),
+            lastName: $("#txtLastName").val(),
+            email: $('#txtEmail').val(),
+            phone: $('#txtPhone').val(),
+            storeId: $('#ddlStore').val(),
+            managerId: $('#ddlManager').val()
+        };
+
+        $.ajax({
+            url: '@Url.Action("SaveStaff", "Sales")',
+            type: 'POST',
+            data: staff,
+            success: function (response) {
+                console.log(response);
+                var result = response.data;
+                if (result == 'Success') {
+                    clearForm();
+                    $('#dvStaffModal').modal('hide');
+                    BindStaffs();
+                }
+            }
+        });
+    });
+
+    function ValidateStaff() {
+        var flag = true;
+
+        if ($("#ddlStore").val() === "0" || $("#ddlStore").val() === null) {
+            showSelect2Error($("#ddlStore"), "Please select any Store Name");
+            flag = false;
+        } else {
+            clearSelect2Error($("#ddlStore"));
+        }
+
+        if ($("#ddlManager").val() === "0" || $("#ddlManager").val() === null) {
+            showSelect2Error($("#ddlManager"), "Please select any Manager Name");
+            flag = false;
+        }
+        else {
+            clearSelect2Error($("#ddlManager"));
+        }
+        if ($.trim($('#txtFirstName').val()) == '') {
+            $('#txtFirstName').addClass('is-invalid')
+            flag = false;
+        }
+
+        if ($.trim($('#txtLastName').val()) == '') {
+            $('#txtLastName').addClass('is-invalid')
+            flag = false;
+        }
+
+        if ($.trim($('#txtEmail').val()) == '') {
+            $('#txtEmail').addClass('is-invalid')
+            flag = false;
+        }
+        else {
+          //  var emailRegex = /^[^\\s@@]+@@[^\\s@@]+\\.[^\s@@]+$/;
+            var emailRegex = /^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            var email = $.trim($('#txtEmail').val());
+            var validEmail = emailRegex.test(email);
+            if (!validEmail) {
+                $('#txtEmail').addClass('is-invalid')
+                flag = false;
+            }
+            else
+                $(this).removeClass('is-invalid');
+        }
+
+        return flag;
+    }
+
+    $('#txtPhone').on('input', function () {
+       // this.value = this.value.replace(/[^0-9]/g, '');
+        this.value = this.value.replace(/[^0-9()\-\s]/g, '');
+
+        if (this.value.length > 0) {
+            $(this).removeClass('is-invalid');
+        }
+    });
+
+    $('.form-control').on('input', function () {
+        if ($(this).val().trim() !== '') {
+            $(this).removeClass('is-invalid');
+        }
+    });
+
+    function EditStaff(staffId) {
+        clearForm();
+        BindStores();
+        BindManagers();
+
+        $.ajax({
+            url: '@Url.Action("EditStaff", "Sales")',
+            type: 'GET',
+            data: { 'staffId': staffId },
+            success: function (response) {
+                var data = response.data;
+                debugger;
+                $('#txtStaffId').val(data.StaffId);
+                $('#txtFirstName').val(data.FirstName);
+                $('#txtLastName').val(data.LastName);
+                $('#txtEmail').val(data.Email);
+                $('#txtPhone').val(data.Phone);
+
+                var storeId = data.StoreId;
+                $('#ddlStore').val(storeId).trigger('change');
+                var mgrId = data.ManagerId;
+                $('#ddlManager').val(mgrId).trigger('change');
+
+                $('#hdrTitle').text('Edit Staff');
+                $('#btnSave').text('Update Changes');
+                $('#dvStaffModal').modal('show');
+            }
+        });
+    }
+
+    function DeleteStaff(staffId) {
+
+    }
+
+    </script>
+}

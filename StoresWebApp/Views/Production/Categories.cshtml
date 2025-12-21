@@ -1,0 +1,220 @@
+﻿
+@{
+    ViewBag.Title = "Categories";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>Categories</h2>*@
+
+<div class="page-inner">
+    @*<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+            <div>
+                <h3 class="fw-bold mb-3">Categories</h3>
+            </div>
+        </div>*@
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Categories Details</h4>
+                </div>
+                <div class="card-body">
+                    <a id="btnAdd" class="btn btn-success" style="margin-bottom:10px;float:right;">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i> Add New
+                    </a>
+                    <div class="table-responsive">
+                        <table id="dtCategory" class="display " style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>Category Name</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*Add/Edit Category popup window*@
+<div id="dvCategoryModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="CategoryModalLabel" area-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="hdrTitle">Add Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <input type="hidden" id="txtCategpryId" value="0" />
+                            <div class="form-group">
+                                <label>Category Name</label>
+                                <input type="text" id="txtCategory" class="form-control" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="btnSave" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        /*Inside DataTable() using ajax config*/
+        @*$(document).ready(function () {
+         $('#dtCategory').DataTable({
+            ajax: {
+                url : '@Url.Action("GetCategories", "Production")',
+                dataSrc : 'data'
+            },
+            columns : [
+                { "title": "Category Name", "data": "CategoryName", "searchable": true }
+            ]
+          });
+        });*@
+
+        $(document).ready(function () {
+            BindCategories();
+        });
+
+       @*function BindCategories() {
+           // Using $ajax manually
+            $.ajax({
+                url: '@Url.Action("GetCategories", "Production")',
+                type: 'GET',
+                success: function (response) {
+                    console.log('Success : ', response),
+
+                    //Manually initiate Datatable with response
+                        $('#dtCategory').DataTable({
+                            data: response.data,
+                            pageLength: 10,
+                            lengthMenu: [5,10,25,50,100],
+                            columns : [
+                                { "title": "Category Name", "data": "CategoryName", "searchable": true }
+                            ]
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }*@
+
+        function BindCategories() {
+             $.ajax({
+                url: '@Url.Action("GetCategories", "Production")',
+                type: 'GET',
+                success: function (response) {
+                    console.log('Success : ', response.data);
+                    var data = response.data;
+                    if ($.fn.DataTable.isDataTable('#dtCategory')) {
+                        $('#dtCategory').DataTable().clear().destroy();
+                    }
+
+                    $('#dtCategory tbody').empty();
+
+                    data.forEach(function (item) {
+                        $('#dtCategory tbody').append(`
+                            <tr>
+                                <td>${item.CategoryName}</td>
+                                <td>
+                                    <button class ="btn btn-sm btn-info" onclick="EditCategory(${item.CategoryId})">Edit</button>
+                                    <button class ="btn btn-sm btn-danger" onclick="DeleteCategory(${item.CategoryId})">Delete</button>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                    $('#dtCategory').DataTable();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+        $('#btnAdd').click(function () {
+            clearForm();
+            $('#hdrTitle').text('Add Category');
+            $('#dvCategoryModal').modal('show');
+        });
+
+        function clearForm() {
+            $('#txtCategpryId').val('');
+            $('#txtCategory').val('');
+        }
+
+        $('#btnSave').click(function () {
+
+            if ($.trim($('#txtCategory').val()) == '') {
+                $('#txtCategory').addClass('is-invalid')
+                return;
+            }
+
+            var category = {
+                CategoryId: $('#txtCategpryId').val(),
+                CategoryName: $('#txtCategory').val()
+            };
+
+            $.ajax({
+                url: '@Url.Action("SaveCategory", "Production")',
+                type: 'POST',
+                data: category,
+                success: function (response) {
+                    console.log(response);
+                    var result = response.message;
+                    if (result == 'Success') {
+                        clearForm();
+                        $('#dvCategoryModal').modal('hide');
+                        BindCategories();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+
+        $('.form-control').on('input', function () {
+            if ($(this).val().trim() !== '') {
+                $(this).removeClass('is-invalid');
+            }
+        });
+
+        $('#dvCategoryModal').on('shown.bs.modal', function () {
+            $(this).find('.is-invalid').removeClass('is-invalid');
+        });
+
+        function EditCategory(categoryId) {
+
+            $.ajax({
+                url: '@Url.Action("EditCategory","Production")',
+                type: 'GET',
+                data: { 'categoryId': categoryId },
+                success: function (response) {
+                    var data = response.data;
+
+                    $('#txtCategpryId').val(data.CategoryId);
+                    $('#txtCategory').val(data.CategoryName);
+
+                    $('#hdrTitle').text('Edit Category');
+                    $('#btnSave').text('Update Changes');
+                    $('#dvCategoryModal').modal('show');
+                }
+            });
+        }
+
+    </script>
+}

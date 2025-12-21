@@ -1,0 +1,302 @@
+﻿@{
+    ViewBag.Title = "NewProduct";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>New Product</h2>*@
+
+@*<div class="page-inner">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">New Products (Deliver to Store)</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="container mt-3">
+                            <div class="row mb-3">
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <label class="me-2 w-25">Store Name</label>
+                                    <select id="ddlStore" class="form-control select2"></select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <label class="me-2 w-25">Category Name</label>
+                                    <select id="ddlCategory" class="form-control select2"></select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <label class="me-2 w-25">Brand Name</label>
+                                    <select id="ddlBrand" class="form-control select2"></select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <label class="me-2 w-25">Product Name</label>
+                                    <select id="ddlProduct" class="form-control select2 w-75"></select>
+                                </div>
+                                <div class="col-md-4 d-flex align-items-center">
+                                    <label class="me-2 w-25">Model Year</label>
+                                    <input id="txtModelYr" type="text" class="form-control w-25" contenteditable="false" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <label class="me-2 w-25">Quantity</label>
+                                    <input type="text" id="txtQty" class="form-control"/>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <button type="button" class="btn btn-secondary">Cancel</button>
+                                    <button type="button" class="btn btn-primary">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+<div class="page-inner">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">New Products (Deliver to Store)</h4>
+                </div>
+                <div class="card-body">
+                    <div class="container mt-3">
+                        <div class="row mb-3">
+                            <div class="col-md-6 d-flex align-items-center">
+                                <label class="me-2 w-25">Product Name</label>
+                                <select id="ddlProduct" class="form-control select2 w-75 clsProduct"></select>
+                            </div>
+                            @*</div>
+
+                                <div class="row mb-3">*@
+                            <div class="col-md-6 d-flex align-items-center">
+                                <label class="me-2 w-25">Store Name</label>
+                                <select id="ddlStore" class="form-control select2 clsStore"></select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6 d-flex align-items-center">
+                                <label class="me-2 w-25">Category</label>
+                                <input type="text" id="txtCategory" class="form-control" re />
+                            </div>
+                            @*</div>
+                            <div class="row mb-3">*@
+                            <div class="col-md-6 d-flex align-items-center">
+                                <label class="me-2 w-25">Brand</label>
+                                <input type="text" id="txtBrand" class="form-control" contenteditable="false" />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6 d-flex align-items-center">
+                                <label class="me-2 w-25">Model Year</label>
+                                <input type="text" id="txtModelYr" class="form-control" contenteditable="false" />
+                            </div>
+                            @*</div>
+                                <div class="row mb-3">*@
+                            <div class="col-md-6 d-flex align-items-center">
+                                <label class="me-2 w-25">Price</label>
+                                <input type="text" id="txtPrice" class="form-control" contenteditable="false" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6 d-flex align-items-center">
+                                <label class="me-2 w-25">Quantity</label>
+                                <input type="text" id="txtQty" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-secondary">Cancel</button>
+                                <button type="button" id="btnSave" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#ddlProduct').select2({
+              //  placeholder: 'Select Product',
+                closeOnSelect: true,
+                width: '100%'
+            });
+
+            $('#ddlStore').select2({
+                //   placeholder: 'Select Store',
+                closeOnSelect: true,
+                width: '100%'
+            });
+ 
+            $('#txtCategory').attr('disabled', true)
+            $('#txtBrand').attr('disabled', true)
+            $('#txtModelYr').attr('disabled', true)
+            $('#txtPrice').attr('disabled', true);
+            BindProduct();
+            BindStores();
+        });
+
+      function BindProduct() {
+        $.ajax({
+            url: '@Url.Action("GetProductDetails","Delivery")',
+            type: 'GET',
+            success: function (response) {
+                console.log('Success : ', response.data);
+                var data = response.data;
+
+                $('#ddlProduct').empty();
+                $('#ddlProduct').append($('<option>/<option>').val('0').html('Select'));
+
+                $.each(data, function (key, item) {
+                    $('#ddlProduct').append($('<option></option>').val(item.ProductId).html(item.ProductName));
+                });
+
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+      }
+
+    function BindStores() {
+        $.ajax({
+        url: '@Url.Action("GetStores", "Delivery")',
+        type: 'GET',
+        success: function (response) {
+            console.log('Success : ', response.data);
+            var data = response.data;
+
+            $('#ddlStore').empty();
+            $('#ddlStore').append($('<option></option>').val('0').html('Select'));
+            $.each(data, function (key, item) {
+                $('#ddlStore').append($('<option></option>').val(item.StoreId).html(item.StoreName));
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error('Error:', error);
+        }
+        });
+    }
+
+        $('.clsProduct').on('change', function () {
+            if ($(this).val() && $(this).val() !== '0') {
+                clearSelect2Error($(this));
+            }
+            var productId = $('#ddlProduct').val();
+            BindProductDetails(productId)
+        });
+
+        $('.clsStore').on('change', function () {
+            if ($(this).val() && $(this).val() !== '0') {
+                clearSelect2Error($(this));
+            }
+        });
+
+        function BindProductDetails(productId) {
+            $.ajax({
+                url: '@Url.Action("GetProductDetailsById","Delivery")',
+                type: 'GET',
+                data: { 'productId': productId },
+                success: function (response) {
+                    console.log('Success : ', response.data);
+                    var data = response.data;
+                    if (data != null) {                   
+                        $('#txtCategory').val(data.CategoryName);
+                        $('#txtBrand').val(data.BrandName);
+                        $('#txtModelYr').val(data.ModelYear);
+                        $('#txtPrice').val(data.ListPrice);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+        $('#btnSave').click(function () {
+            debugger;
+            var flag = true;
+            if ($("#ddlProduct").val() === "0" || $("#ddlProduct").val() === null) {
+                showSelect2Error($("#ddlProduct"), "Please select a product");
+                flag = false;
+            } else {
+                clearSelect2Error($("#ddlProduct"));
+            }
+
+            if ($("#ddlStore").val() === "0" || $("#ddlStore").val() === null) {
+                showSelect2Error($("#ddlStore"), "Please select a store");
+                flag = false;
+            }
+            else {
+                clearSelect2Error($("#ddlStore"));
+            }
+           
+            if ($.trim($('#txtQty').val()) == '') {
+                $('#txtQty').css('border-color', '#a94442');
+                flag = false;
+            }          
+
+            if (!flag)
+                return;
+
+            var stockParams = {
+                StoreId : $('#ddlStore').val(),
+                ProductId : $('#ddlProduct').val(),
+                Quantity : $('#txtQty').val()
+            };
+
+            $.ajax({
+                url: '@Url.Action("SaveNewProductInStore","delivery")',
+                type: 'POST',
+                data: stockParams,
+                success: function (response) {
+                    console.log(response);
+                    var result = response.data;                    
+                    if (result == 'Success') {
+                        clearForm();                      
+                    }
+                }
+            });
+        });
+
+        $('#txtQty').on('change', function () {
+            if ($.trim($('#txtQty').val()) != '') {
+                $('#txtQty').css('border-color', '#ebedf2');
+            }
+            else {
+                $('#txtQty').css('border-color', '#a94442');
+            }
+        });
+
+        function clearForm() {
+            $('#ddlProduct').val('0').trigger('change');
+            $('#ddlStore').val('0').trigger('change');
+
+            $('#txtCategory').val('');
+            $('#txtBrand').val('');
+            $('#txtModelYr').val('');
+            $('#txtPrice').val('');
+            $('#txtQty').val('');
+        }
+
+    </script>
+}

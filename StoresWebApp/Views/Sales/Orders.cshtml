@@ -1,0 +1,435 @@
+﻿
+@{
+    ViewBag.Title = "Orders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>Orders</h2>*@
+
+<div class="page-inner">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Order Details</h4>
+                </div>
+                <div class="card-body">
+                    <div class="accordion" id="searchAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Search by
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#searchAccordion">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Customer Name</label>
+                                                <select id="ddlCustomer" class="form-control select2 clsCustomer"></select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Store Name</label>
+                                                <select id="ddlStore" class="form-control select2 clsStore"></select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Staff Name</label>
+                                                <select id="ddlStaff" class="form-control select2 clsStaff"></select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Status</label>
+                                                <select id="ddlStatus" class="form-control select2 clsStatus"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row g-3">
+                                        <div class="col-md-3 d-flex align-items-center">
+                                            <div class="form-group">
+                                                <label class="me-3">Order Date From</label>
+                                                <input id="dtStartDate" class="form-control Wd-150" type="date" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3 d-flex align-items-center">
+                                            <div class="form-group">
+                                                <label class="me-3">Order Date To</label>
+                                                <input id="dtEndDate" class="form-control Wd-150" type="date" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 gap-2 d-flex align-items-center">
+                                            <button type="button" id="btnShow" class="btn btn-primary">Show</button>
+                                            <button type="button" id="btnReset" class="btn btn-warning">Reset</button>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-12">
+                        <a id="btnAdd" class="btn btn-success" style="margin-bottom:10px;float:right;">
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i> Add New
+                        </a>
+                        <div class="table-responsive">
+                            <table id="dtOrder" class="display " style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Customer Name</th>
+                                        <th>Store Name</th>
+                                        <th>Staff Name</th>
+                                        <th>Order Date</th>
+                                        <th>Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Order Item Popup*@
+<div id="dvOrdItemViewModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="hdrTitle">Order Item for Order Id :</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="table-responsive">
+                        <table id="dtItems" class="display " style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Amount</th>
+                                    <th>Discount</th>
+                                    <th>DiscountAmount</th>
+                                    <th>TotalAmount</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="6"><label style="float:right;"><b>Net Amount : </b></label></td>
+                                    <td><label id="lblNetAmount"></label></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('#ddlCustomer').select2({
+                placeholder: 'Select Customer',
+                closeOnSelect: true,
+                width: '100%'
+            });
+
+            $('#ddlStore').select2({
+                placeholder: 'Select Store',
+                closeOnSelect: true,
+                width: '100%'
+            });
+            $('#ddlStaff').select2({
+                placeholder: 'Select Staff',
+                closeOnSelect: true,
+                width: '100%'
+            });
+
+            $('#ddlStatus').select2({
+                placeholder: 'Select Status',
+                closeOnSelect: true,
+                width: '100%'
+            });
+
+            $('#ddlStore').select2({
+                //   placeholder: 'Select Store',
+                closeOnSelect: true,
+                width: '100%'
+            })
+
+            var today = new Date().toISOString().split('T')[0];
+            $('#dtStartDate').val(today);
+            $('#dtEndDate').val(today);
+
+        BindCustomer();
+        BindStores();
+        BindStaffs();
+        BindStatus();
+
+          BindOrders();
+     });
+
+    function BindCustomer() {
+           $.ajax({
+            url: '@Url.Action("GetCustomerLookUp", "Sales")',
+            type: 'GET',
+            success: function (response) {
+                console.log('Succe0ss : ', response.data);
+                var data = response.data;
+
+                $('#ddlCustomer').empty();
+                $('#ddlCustomer').append($('<option></option>').val('0').html('Select'));
+                $.each(data, function (key, item) {
+                    $('#ddlCustomer').append($('<option></option>').val(item.CustomerId).html(item.CustomerName));
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+          });
+        }
+
+    function BindStores() {
+         $.ajax({
+            url: '@Url.Action("GetStores", "Delivery")',
+            type: 'GET',
+            success: function (response) {
+                console.log('Succe0ss : ', response.data);
+                var data = response.data;
+
+                $('#ddlStore').empty();
+                $('#ddlStore').append($('<option></option>').val('0').html('Select'));
+                $.each(data, function (key, item) {
+                    $('#ddlStore').append($('<option></option>').val(item.StoreId).html(item.StoreName));
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+          });
+        }
+
+     function BindStaffs() {
+            $.ajax({
+            url: '@Url.Action("GetStaffLookUp", "Sales")',
+            type: 'GET',
+            success: function (response) {
+                console.log('Success : ', response.data);
+                var data = response.data;
+
+                $('#ddlStaff').empty();
+                $('#ddlStaff').append($('<option></option>').val('0').html('Select'));
+                $.each(data, function (key, item) {
+                    $('#ddlStaff').append($('<option></option>').val(item.StaffId).html(item.StaffName));
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+          });
+        }
+
+      function BindStatus() {
+          $.ajax({
+            url: '@Url.Action("GetStatusLookUp", "Sales")',
+            type: 'GET',
+            success: function (response) {
+                console.log('Success : ', response.data);
+                var data = response.data;
+
+                $('#ddlStatus').empty();
+                $('#ddlStatus').append($('<option></option>').val('0').html('Select'));
+                $.each(data, function (key, item) {
+                    $('#ddlStatus').append($('<option></option>').val(item.OrderStatusId).html(item.OrderStatus));
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+          });
+        }
+
+    $('.clsCustomer').on('change', function () {
+        if ($(this).val() && $(this).val() !== '0') {
+            clearSelect2Error($(this));
+        }
+    });
+
+    $('.clsStore').on('change', function () {
+        if ($(this).val() && $(this).val() !== '0') {
+            clearSelect2Error($(this));
+        }
+    });
+
+      $('.clsStaff').on('change', function () {
+            if ($(this).val() && $(this).val() !== '0') {
+                clearSelect2Error($(this));
+            }
+      });
+
+    $('.clsStatus').on('change', function () {
+        if ($(this).val() && $(this).val() !== '0') {
+            clearSelect2Error($(this));
+        }
+    });
+
+      function BindOrders() {
+          $.ajax({
+            url: '@Url.Action("GetAllOrders", "Sales")',
+            type: 'GET',
+            success: function (response) {
+                console.log('Success : ', response.data);
+                var data = response.data;
+                if ($.fn.DataTable.isDataTable('#dtOrder')) {
+                    $('#dtOrder').DataTable().clear().destroy();
+                }
+
+                $('#dtOrder tbody').empty();
+
+                data.forEach(function (item) {
+                    var dt = moment(item.OrderDate).format('DD-MM-YYYY');
+                    $('#dtOrder tbody').append(`
+                        <tr>
+                            <td>${item.CustomerName}</td>
+                            <td>${item.StoreName}</td>
+                            <td>${item.StaffName}</td>
+                            <td>${dt}</td>
+                            <td>${item.OrderStatus}</td>
+                            <td>
+                                <button class ="btn btn-sm btn-info" onclick="ShowOrderItems(${item.OrderId})">Show Order Items</button>
+                            </td>
+                        </tr>
+                    `);
+                });
+
+                $('#dtOrder').DataTable();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+      }
+
+    $('#btnShow').click(function () {
+            //ddlCustomer ddlStore ddlStaff ddlStatus dtStartDate dtEndDate
+        var searchParams = {
+            customerId: $('#ddlCustomer').val(),
+            storeId: $('#ddlStore').val(),
+            staffId: $('#ddlStaff').val(),
+            statusId: $('#ddlStatus').val(),
+            startDate: $('#dtStartDate').val(),
+            endDate: $('#dtEndDate').val()
+        };
+
+        $.ajax({
+            url: '@Url.Action("GetOrderSearch","Sales")',
+            type: 'GET',
+            data: searchParams,
+            success: function (response) {
+                console.log(response);
+                console.log('Success : ', response.data);
+                var data = response.data;
+
+                if ($.fn.DataTable.isDataTable('#dtOrder')) {
+                    $('#dtOrder').DataTable().clear().destroy();
+                }
+
+                $('#dtOrder tbody').empty();
+
+                data.forEach(function (item) {
+                    var dt = moment(item.OrderDate).format('DD-MM-YYYY');
+                    $('#dtOrder tbody').append(`
+                        <tr>
+                            <td>${item.CustomerName}</td>
+                            <td>${item.StoreName}</td>
+                            <td>${item.StaffName}</td>
+                            <td>${dt}</td>
+                            <td>${item.OrderStatus}</td>
+                            <td>
+                                <button class ="btn btn-sm btn-info" onclick="ShowOrderItems(${item.OrderId})">Show Order Items</button>
+                            </td>
+                        </tr>
+                    `);
+                });
+
+                $('#dtOrder').DataTable();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+
+    function ShowOrderItems(orderId) {
+        $.ajax({
+            url: '@Url.Action("GetItemsDetailsByOrderId","Sales")',
+            type: 'GET',
+            data: { 'orderId': orderId },
+            success: function (response) {
+                var data = response.data;
+
+                if ($.fn.DataTable.isDataTable('#dtItems')) {
+                    $('#dtItems').DataTable().clear().destroy();
+                }
+
+                $('#dtItems tbody').empty();
+                var netAmt = 0.0;
+                debugger;
+                data.forEach(function (item) {
+                    netAmt += parseFloat(item.TotalAmount);
+
+                    $('#dtItems tbody').append(`
+                        <tr>
+                            <td>${item.ProductName}</td>
+                            <td>${item.Quantity}</td>
+                            <td>${item.Price}</td>
+                            <td>${item.Amount.toFixed(2)}</td>
+                            <td>${item.Discount}</td>
+                            <td>${item.DiscountAmount.toFixed(2)}</td>
+                            <td>${item.TotalAmount.toFixed(2)}</td>
+                        </tr>                    
+                    `);
+
+                    $('#lblNetAmount').text(netAmt.toFixed(2));
+                });
+                $('#dtItems').DataTable();
+
+                var title = 'Order Item for Order Id : ' + orderId
+                $('#hdrTitle').text(title);
+                $('#dvOrdItemViewModal').modal('show');
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+        }
+
+    </script>
+
+
+}
+

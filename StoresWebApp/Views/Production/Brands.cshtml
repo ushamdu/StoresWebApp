@@ -1,0 +1,176 @@
+﻿@{
+    ViewBag.Title = "Brands";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>Brands</h2>*@
+
+<div class="page-inner">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Brands Details</h4>
+                </div>
+                <div class="card-body">
+                    <a id="btnAdd" class="btn btn-success" style="margin-bottom:10px;float:right;">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i> Add New
+                    </a>
+                    <div class="table-responsive">
+                        <table id="dtBrands" class="display " style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>Brand Name</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Add/Edit Brand popup window*@
+<div id="dvBrandModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="BrandModalLabel" area-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="hdrTitle">Add Brand</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <input type="hidden" id="txtBrandId" value="0" />
+                            <div class="form-group">
+                                <label>Brand Name</label>
+                                <input type="text" id="txtBrand" class="form-control" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="btnSave" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            BindBrands();
+        });
+
+        function BindBrands() {
+            $.ajax({
+            url: '@Url.Action("GetBrands", "Production")',
+            type: 'GET',
+            success: function (response) {
+                console.log('Success : ', response.data);
+                var data = response.data;
+                if ($.fn.DataTable.isDataTable('#dtBrands')) {
+                    $('#dtBrands').DataTable().clear().destroy();
+                }
+
+                $('#dtBrands tbody').empty();
+
+                data.forEach(function (item) {
+                    $('#dtBrands tbody').append(`
+                        <tr>
+                            <td>${item.BrandName}</td>
+                            <td>
+                                <button class ="btn btn-sm btn-info" onclick="EditBrand(${item.BrandId})">Edit</button>
+                                <button class ="btn btn-sm btn-danger" onclick="DeleteBrand(${item.BrandId})">Delete</button>
+                            </td>
+                        </tr>
+                    `);
+                });
+
+                $('#dtBrands').DataTable();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    $('#btnAdd').click(function () {
+        clearForm();
+        $('#hdrTitle').text('Add Brand');
+        $('#dvBrandModal').modal('show');
+    });
+
+    function clearForm() {
+        $('#txtBrandId').val('');
+        $('#txtBrand').val('');
+    }
+
+    $('#btnSave').click(function () {
+
+        if ($.trim($('#txtBrand').val()) == '') {
+            $('#txtBrand').addClass('is-invalid')
+            return;
+        }
+
+        var brand = {
+            BrandId: $('#txtBrandId').val(),
+            BrandName: $('#txtBrand').val()
+        };
+
+        $.ajax({
+            url: '@Url.Action("SaveBrand", "Production")',
+            type: 'POST',
+            data: brand,
+            success: function (response) {
+                console.log(response);
+                var result = response.message;
+                if (result == 'Success') {
+                    clearForm();
+                    $('#dvBrandModal').modal('hide');
+                    BindBrands();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+
+    $('.form-control').on('input', function () {
+        if ($(this).val().trim() !== '') {
+            $(this).removeClass('is-invalid');
+        }
+    });
+
+    $('#dvBrandModal').on('shown.bs.modal', function () {
+        $(this).find('.is-invalid').removeClass('is-invalid');
+    });
+
+    function EditBrand(brandId) {
+
+        $.ajax({
+            url: '@Url.Action("EditBrand", "Production")',
+            type: 'GET',
+            data: { 'brandId': brandId },
+            success: function (response) {
+                var data = response.data;
+
+                $('#txtBrandId').val(data.BrandId);
+                $('#txtBrand').val(data.BrandName);
+
+                $('#hdrTitle').text('Edit Brand');
+                $('#btnSave').text('Update Changes');
+                $('#dvBrandModal').modal('show');
+            }
+        });
+    }
+
+    </script>
+}

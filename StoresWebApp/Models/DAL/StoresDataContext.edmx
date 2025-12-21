@@ -1,0 +1,870 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="BikeStoresModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Brands">
+          <Key>
+            <PropertyRef Name="Brand_Id" />
+          </Key>
+          <Property Name="Brand_Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Brand_Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="CreatedTs" Type="datetime" />
+          <Property Name="LastModifiedTs" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Categories">
+          <Key>
+            <PropertyRef Name="Category_Id" />
+          </Key>
+          <Property Name="Category_Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Category_Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="CreatedTs" Type="datetime" />
+          <Property Name="LastModifiedTs" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Customers">
+          <Key>
+            <PropertyRef Name="Customer_Id" />
+          </Key>
+          <Property Name="Customer_Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="First_Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Last_Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Phone" Type="varchar" MaxLength="25" />
+          <Property Name="Email" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Street" Type="varchar" MaxLength="255" />
+          <Property Name="City" Type="varchar" MaxLength="50" />
+          <Property Name="State_Name" Type="varchar" MaxLength="25" />
+          <Property Name="Zip_Code" Type="varchar" MaxLength="5" />
+          <Property Name="CreatedTs" Type="datetime" />
+          <Property Name="LastModifiedTs" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Order_Items">
+          <Key>
+            <PropertyRef Name="Item_Id" />
+          </Key>
+          <Property Name="Item_Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Order_Id" Type="bigint" />
+          <Property Name="Product_Id" Type="bigint" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="List_Price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="Discount" Type="decimal" Precision="4" Scale="2" Nullable="false" />
+          <Property Name="CreatedTs" Type="datetime" />
+          <Property Name="LastModifiedTs" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Order_Status">
+          <Key>
+            <PropertyRef Name="Order_StatusId" />
+          </Key>
+          <Property Name="Order_StatusId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrderStatus" Type="varchar" MaxLength="15" />
+          <Property Name="CreatedTs" Type="datetime" />
+          <Property Name="LastModifiedTs" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Orders">
+          <Key>
+            <PropertyRef Name="Order_Id" />
+          </Key>
+          <Property Name="Order_Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Customer_Id" Type="bigint" />
+          <Property Name="Order_StatusId" Type="bigint" Nullable="false" />
+          <Property Name="Order_Date" Type="date" Nullable="false" />
+          <Property Name="Required_Date" Type="date" Nullable="false" />
+          <Property Name="Shipped_Date" Type="date" />
+          <Property Name="Store_Id" Type="bigint" Nullable="false" />
+          <Property Name="Staff_Id" Type="bigint" Nullable="false" />
+          <Property Name="CreatedTs" Type="datetime" />
+          <Property Name="LastModifiedTs" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="Product_Id" />
+          </Key>
+          <Property Name="Product_Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Product_Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Brand_Id" Type="bigint" Nullable="false" />
+          <Property Name="Category_Id" Type="bigint" Nullable="false" />
+          <Property Name="Model_Year" Type="smallint" Nullable="false" />
+          <Property Name="List_Price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="CreatedTs" Type="datetime" />
+          <Property Name="LastModifiedTs" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Staffs">
+          <Key>
+            <PropertyRef Name="Staff_Id" />
+          </Key>
+          <Property Name="Staff_Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="First_Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Last_Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Phone" Type="varchar" MaxLength="25" />
+          <Property Name="Active" Type="tinyint" Nullable="false" />
+          <Property Name="Store_Id" Type="bigint" Nullable="false" />
+          <Property Name="Manager_Id" Type="bigint" />
+          <Property Name="CreatedTs" Type="datetime" />
+          <Property Name="LastModifiedTs" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Stocks">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Store_Id" Type="bigint" />
+          <Property Name="Product_Id" Type="bigint" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="CreatedTs" Type="datetime" />
+          <Property Name="LastModifiedTs" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Stores">
+          <Key>
+            <PropertyRef Name="Store_Id" />
+          </Key>
+          <Property Name="Store_Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Store_Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Phone" Type="varchar" MaxLength="25" />
+          <Property Name="Email" Type="varchar" MaxLength="255" />
+          <Property Name="Street" Type="varchar" MaxLength="255" />
+          <Property Name="City" Type="varchar" MaxLength="255" />
+          <Property Name="State_Name" Type="varchar" MaxLength="10" />
+          <Property Name="Zip_Code" Type="varchar" MaxLength="5" />
+          <Property Name="CreatedTs" Type="datetime" />
+          <Property Name="LastModifiedTs" Type="datetime" />
+        </EntityType>
+        <Association Name="FK__Order_Ite__Order__619B8048">
+          <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
+          <End Role="Order_Items" Type="Self.Order_Items" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="Order_Id" />
+            </Principal>
+            <Dependent Role="Order_Items">
+              <PropertyRef Name="Order_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Order_Ite__Produ__628FA481">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="Order_Items" Type="Self.Order_Items" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="Product_Id" />
+            </Principal>
+            <Dependent Role="Order_Items">
+              <PropertyRef Name="Product_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Orders__Customer__5BE2A6F2">
+          <End Role="Customers" Type="Self.Customers" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customers">
+              <PropertyRef Name="Customer_Id" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="Customer_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Orders__Staff_Id__5DCAEF64">
+          <End Role="Staffs" Type="Self.Staffs" Multiplicity="1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Staffs">
+              <PropertyRef Name="Staff_Id" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="Staff_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Orders__Store_Id__5CD6CB2B">
+          <End Role="Stores" Type="Self.Stores" Multiplicity="1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stores">
+              <PropertyRef Name="Store_Id" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="Store_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Products__Brand___5535A963">
+          <End Role="Brands" Type="Self.Brands" Multiplicity="1" />
+          <End Role="Products" Type="Self.Products" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Brands">
+              <PropertyRef Name="Brand_Id" />
+            </Principal>
+            <Dependent Role="Products">
+              <PropertyRef Name="Brand_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Products__Catego__5441852A">
+          <End Role="Categories" Type="Self.Categories" Multiplicity="1" />
+          <End Role="Products" Type="Self.Products" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categories">
+              <PropertyRef Name="Category_Id" />
+            </Principal>
+            <Dependent Role="Products">
+              <PropertyRef Name="Category_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Staffs__Manager___32E0915F">
+          <End Role="Staffs" Type="Self.Staffs" Multiplicity="0..1" />
+          <End Role="Staffs1" Type="Self.Staffs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Staffs">
+              <PropertyRef Name="Staff_Id" />
+            </Principal>
+            <Dependent Role="Staffs1">
+              <PropertyRef Name="Manager_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Staffs__Store_Id__31EC6D26">
+          <End Role="Stores" Type="Self.Stores" Multiplicity="1" />
+          <End Role="Staffs" Type="Self.Staffs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stores">
+              <PropertyRef Name="Store_Id" />
+            </Principal>
+            <Dependent Role="Staffs">
+              <PropertyRef Name="Store_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Stocks__Product___59063A47">
+          <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
+          <End Role="Stocks" Type="Self.Stocks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="Product_Id" />
+            </Principal>
+            <Dependent Role="Stocks">
+              <PropertyRef Name="Product_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Stocks__Store_Id__5812160E">
+          <End Role="Stores" Type="Self.Stores" Multiplicity="0..1" />
+          <End Role="Stocks" Type="Self.Stocks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stores">
+              <PropertyRef Name="Store_Id" />
+            </Principal>
+            <Dependent Role="Stocks">
+              <PropertyRef Name="Store_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Order_Status">
+          <End Role="Order_Status" Type="Self.Order_Status" Multiplicity="1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order_Status">
+              <PropertyRef Name="Order_StatusId" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="Order_StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BikeStoresModelStoreContainer">
+          <EntitySet Name="Brands" EntityType="Self.Brands" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Customers" EntityType="Self.Customers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Order_Items" EntityType="Self.Order_Items" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Order_Status" EntityType="Self.Order_Status" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Staffs" EntityType="Self.Staffs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Stocks" EntityType="Self.Stocks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Stores" EntityType="Self.Stores" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Order_Ite__Order__619B8048" Association="Self.FK__Order_Ite__Order__619B8048">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="Order_Items" EntitySet="Order_Items" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Order_Ite__Produ__628FA481" Association="Self.FK__Order_Ite__Produ__628FA481">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Order_Items" EntitySet="Order_Items" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Orders__Customer__5BE2A6F2" Association="Self.FK__Orders__Customer__5BE2A6F2">
+            <End Role="Customers" EntitySet="Customers" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Orders__Staff_Id__5DCAEF64" Association="Self.FK__Orders__Staff_Id__5DCAEF64">
+            <End Role="Staffs" EntitySet="Staffs" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Orders__Store_Id__5CD6CB2B" Association="Self.FK__Orders__Store_Id__5CD6CB2B">
+            <End Role="Stores" EntitySet="Stores" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Products__Brand___5535A963" Association="Self.FK__Products__Brand___5535A963">
+            <End Role="Brands" EntitySet="Brands" />
+            <End Role="Products" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Products__Catego__5441852A" Association="Self.FK__Products__Catego__5441852A">
+            <End Role="Categories" EntitySet="Categories" />
+            <End Role="Products" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Staffs__Manager___32E0915F" Association="Self.FK__Staffs__Manager___32E0915F">
+            <End Role="Staffs" EntitySet="Staffs" />
+            <End Role="Staffs1" EntitySet="Staffs" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Staffs__Store_Id__31EC6D26" Association="Self.FK__Staffs__Store_Id__31EC6D26">
+            <End Role="Stores" EntitySet="Stores" />
+            <End Role="Staffs" EntitySet="Staffs" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Stocks__Product___59063A47" Association="Self.FK__Stocks__Product___59063A47">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Stocks" EntitySet="Stocks" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Stocks__Store_Id__5812160E" Association="Self.FK__Stocks__Store_Id__5812160E">
+            <End Role="Stores" EntitySet="Stores" />
+            <End Role="Stocks" EntitySet="Stocks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Order_Status" Association="Self.FK_Orders_Order_Status">
+            <End Role="Order_Status" EntitySet="Order_Status" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BikeStoresModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Brand">
+          <Key>
+            <PropertyRef Name="Brand_Id" />
+          </Key>
+          <Property Name="Brand_Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Brand_Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CreatedTs" Type="DateTime" Precision="3" />
+          <Property Name="LastModifiedTs" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Products" Relationship="Self.FK__Products__Brand___4E88ABD4" FromRole="Brands" ToRole="Products" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="Category_Id" />
+          </Key>
+          <Property Name="Category_Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Category_Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CreatedTs" Type="DateTime" Precision="3" />
+          <Property Name="LastModifiedTs" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Products" Relationship="Self.FK__Products__Catego__4D94879B" FromRole="Categories" ToRole="Products" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="Customer_Id" />
+          </Key>
+          <Property Name="Customer_Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="First_Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Last_Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Phone" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Street" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="State_Name" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="Zip_Code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedTs" Type="DateTime" Precision="3" />
+          <Property Name="LastModifiedTs" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Orders" Relationship="BikeStoresModel.FK__Orders__Customer__5BE2A6F2" FromRole="Customer" ToRole="Order" />
+        </EntityType>
+        <EntityType Name="Order_Items">
+          <Key>
+            <PropertyRef Name="Item_Id" />
+          </Key>
+          <Property Name="Order_Id" Type="Int64" />
+          <Property Name="Item_Id" Type="Int64" Nullable="false" />
+          <Property Name="Product_Id" Type="Int64" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="List_Price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="Discount" Type="Decimal" Precision="4" Scale="2" Nullable="false" />
+          <Property Name="CreatedTs" Type="DateTime" Precision="3" />
+          <Property Name="LastModifiedTs" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Product" Relationship="Self.FK__Order_Ite__Produ__619B8048" FromRole="Order_Items" ToRole="Products" />
+          <NavigationProperty Name="Order" Relationship="BikeStoresModel.FK__Order_Ite__Order__619B8048" FromRole="Order_Items" ToRole="Order" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="Product_Id" />
+          </Key>
+          <Property Name="Product_Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Product_Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Brand_Id" Type="Int64" Nullable="false" />
+          <Property Name="Category_Id" Type="Int64" Nullable="false" />
+          <Property Name="Model_Year" Type="Int16" Nullable="false" />
+          <Property Name="List_Price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="CreatedTs" Type="DateTime" Precision="3" />
+          <Property Name="LastModifiedTs" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Brand" Relationship="Self.FK__Products__Brand___4E88ABD4" FromRole="Products" ToRole="Brands" />
+          <NavigationProperty Name="Category" Relationship="Self.FK__Products__Catego__4D94879B" FromRole="Products" ToRole="Categories" />
+          <NavigationProperty Name="Order_Items" Relationship="Self.FK__Order_Ite__Produ__619B8048" FromRole="Products" ToRole="Order_Items" />
+          <NavigationProperty Name="Stocks" Relationship="Self.FK__Stocks__Product___656C112C" FromRole="Products" ToRole="Stocks" />
+        </EntityType>
+        <EntityType Name="Staff">
+          <Key>
+            <PropertyRef Name="Staff_Id" />
+          </Key>
+          <Property Name="Staff_Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="First_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Last_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Phone" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="Active" Type="Byte" Nullable="false" />
+          <Property Name="Store_Id" Type="Int64" Nullable="false" />
+          <Property Name="Manager_Id" Type="Int64" />
+          <Property Name="CreatedTs" Type="DateTime" Precision="3" />
+          <Property Name="LastModifiedTs" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Staffs1" Relationship="Self.FK__Staffs__Manager___571DF1D5" FromRole="Staffs" ToRole="Staffs1" />
+          <NavigationProperty Name="Staff1" Relationship="Self.FK__Staffs__Manager___571DF1D5" FromRole="Staffs1" ToRole="Staffs" />
+          <NavigationProperty Name="Store" Relationship="Self.FK__Staffs__Store_Id__5629CD9C" FromRole="Staffs" ToRole="Stores" />
+          <NavigationProperty Name="Orders" Relationship="BikeStoresModel.FK__Orders__Staff_Id__5DCAEF64" FromRole="Staff" ToRole="Order" />
+        </EntityType>
+        <EntityType Name="Stock">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Store_Id" Type="Int64" />
+          <Property Name="Product_Id" Type="Int64" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="CreatedTs" Type="DateTime" Precision="3" />
+          <Property Name="LastModifiedTs" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Product" Relationship="Self.FK__Stocks__Product___656C112C" FromRole="Stocks" ToRole="Products" />
+          <NavigationProperty Name="Store" Relationship="Self.FK__Stocks__Store_Id__6477ECF3" FromRole="Stocks" ToRole="Stores" />
+        </EntityType>
+        <EntityType Name="Store">
+          <Key>
+            <PropertyRef Name="Store_Id" />
+          </Key>
+          <Property Name="Store_Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Store_Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Phone" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Street" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="City" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="State_Name" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Zip_Code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedTs" Type="DateTime" Precision="3" />
+          <Property Name="LastModifiedTs" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Staffs" Relationship="Self.FK__Staffs__Store_Id__5629CD9C" FromRole="Stores" ToRole="Staffs" />
+          <NavigationProperty Name="Stocks" Relationship="Self.FK__Stocks__Store_Id__6477ECF3" FromRole="Stores" ToRole="Stocks" />
+          <NavigationProperty Name="Orders" Relationship="BikeStoresModel.FK__Orders__Store_Id__5CD6CB2B" FromRole="Store" ToRole="Order" />
+        </EntityType>
+        <Association Name="FK__Products__Brand___4E88ABD4">
+          <End Role="Brands" Type="Self.Brand" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Products" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Brands">
+              <PropertyRef Name="Brand_Id" />
+            </Principal>
+            <Dependent Role="Products">
+              <PropertyRef Name="Brand_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Products__Catego__4D94879B">
+          <End Role="Categories" Type="Self.Category" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Products" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categories">
+              <PropertyRef Name="Category_Id" />
+            </Principal>
+            <Dependent Role="Products">
+              <PropertyRef Name="Category_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Order_Ite__Produ__619B8048">
+          <End Role="Products" Type="Self.Product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Order_Items" Type="Self.Order_Items" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="Product_Id" />
+            </Principal>
+            <Dependent Role="Order_Items">
+              <PropertyRef Name="Product_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Stocks__Product___656C112C">
+          <End Role="Products" Type="Self.Product" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Stocks" Type="Self.Stock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="Product_Id" />
+            </Principal>
+            <Dependent Role="Stocks">
+              <PropertyRef Name="Product_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Staffs__Manager___571DF1D5">
+          <End Role="Staffs" Type="Self.Staff" Multiplicity="0..1" />
+          <End Role="Staffs1" Type="Self.Staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Staffs">
+              <PropertyRef Name="Staff_Id" />
+            </Principal>
+            <Dependent Role="Staffs1">
+              <PropertyRef Name="Manager_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Staffs__Store_Id__5629CD9C">
+          <End Role="Stores" Type="Self.Store" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Staffs" Type="Self.Staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stores">
+              <PropertyRef Name="Store_Id" />
+            </Principal>
+            <Dependent Role="Staffs">
+              <PropertyRef Name="Store_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Stocks__Store_Id__6477ECF3">
+          <End Role="Stores" Type="Self.Store" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Stocks" Type="Self.Stock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stores">
+              <PropertyRef Name="Store_Id" />
+            </Principal>
+            <Dependent Role="Stocks">
+              <PropertyRef Name="Store_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BikeStoresEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Brands" EntityType="Self.Brand" />
+          <EntitySet Name="Categories" EntityType="Self.Category" />
+          <EntitySet Name="Customers" EntityType="Self.Customer" />
+          <EntitySet Name="Order_Items" EntityType="Self.Order_Items" />
+          <EntitySet Name="Products" EntityType="Self.Product" />
+          <EntitySet Name="Staffs" EntityType="Self.Staff" />
+          <EntitySet Name="Stocks" EntityType="Self.Stock" />
+          <EntitySet Name="Stores" EntityType="Self.Store" />
+          <AssociationSet Name="FK__Products__Brand___4E88ABD4" Association="Self.FK__Products__Brand___4E88ABD4">
+            <End Role="Brands" EntitySet="Brands" />
+            <End Role="Products" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Products__Catego__4D94879B" Association="Self.FK__Products__Catego__4D94879B">
+            <End Role="Categories" EntitySet="Categories" />
+            <End Role="Products" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Order_Ite__Produ__619B8048" Association="Self.FK__Order_Ite__Produ__619B8048">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Order_Items" EntitySet="Order_Items" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Stocks__Product___656C112C" Association="Self.FK__Stocks__Product___656C112C">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Stocks" EntitySet="Stocks" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Staffs__Manager___571DF1D5" Association="Self.FK__Staffs__Manager___571DF1D5">
+            <End Role="Staffs" EntitySet="Staffs" />
+            <End Role="Staffs1" EntitySet="Staffs" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Staffs__Store_Id__5629CD9C" Association="Self.FK__Staffs__Store_Id__5629CD9C">
+            <End Role="Stores" EntitySet="Stores" />
+            <End Role="Staffs" EntitySet="Staffs" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Stocks__Store_Id__6477ECF3" Association="Self.FK__Stocks__Store_Id__6477ECF3">
+            <End Role="Stores" EntitySet="Stores" />
+            <End Role="Stocks" EntitySet="Stocks" />
+          </AssociationSet>
+          <EntitySet Name="Order_Status" EntityType="BikeStoresModel.Order_Status" />
+          <EntitySet Name="Orders" EntityType="BikeStoresModel.Order" />
+          <AssociationSet Name="FK__Orders__Customer__5BE2A6F2" Association="BikeStoresModel.FK__Orders__Customer__5BE2A6F2">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Order_Ite__Order__619B8048" Association="BikeStoresModel.FK__Order_Ite__Order__619B8048">
+            <End Role="Order" EntitySet="Orders" />
+            <End Role="Order_Items" EntitySet="Order_Items" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Order_Status" Association="BikeStoresModel.FK_Orders_Order_Status">
+            <End Role="Order_Status" EntitySet="Order_Status" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Orders__Staff_Id__5DCAEF64" Association="BikeStoresModel.FK__Orders__Staff_Id__5DCAEF64">
+            <End Role="Staff" EntitySet="Staffs" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Orders__Store_Id__5CD6CB2B" Association="BikeStoresModel.FK__Orders__Store_Id__5CD6CB2B">
+            <End Role="Store" EntitySet="Stores" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Order_Status">
+          <Key>
+            <PropertyRef Name="Order_StatusId" />
+          </Key>
+          <Property Name="Order_StatusId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderStatus" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedTs" Type="DateTime" Precision="3" />
+          <Property Name="LastModifiedTs" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Orders" Relationship="BikeStoresModel.FK_Orders_Order_Status" FromRole="Order_Status" ToRole="Order" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="Order_Id" />
+          </Key>
+          <Property Name="Order_Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Customer_Id" Type="Int64" />
+          <Property Name="Order_StatusId" Type="Int64" Nullable="false" />
+          <Property Name="Order_Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Required_Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Shipped_Date" Type="DateTime" Precision="0" />
+          <Property Name="Store_Id" Type="Int64" Nullable="false" />
+          <Property Name="Staff_Id" Type="Int64" Nullable="false" />
+          <Property Name="CreatedTs" Type="DateTime" Precision="3" />
+          <Property Name="LastModifiedTs" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Customer" Relationship="BikeStoresModel.FK__Orders__Customer__5BE2A6F2" FromRole="Order" ToRole="Customer" />
+          <NavigationProperty Name="Order_Items" Relationship="BikeStoresModel.FK__Order_Ite__Order__619B8048" FromRole="Order" ToRole="Order_Items" />
+          <NavigationProperty Name="Order_Status" Relationship="BikeStoresModel.FK_Orders_Order_Status" FromRole="Order" ToRole="Order_Status" />
+          <NavigationProperty Name="Staff" Relationship="BikeStoresModel.FK__Orders__Staff_Id__5DCAEF64" FromRole="Order" ToRole="Staff" />
+          <NavigationProperty Name="Store" Relationship="BikeStoresModel.FK__Orders__Store_Id__5CD6CB2B" FromRole="Order" ToRole="Store" />
+        </EntityType>
+        <Association Name="FK__Orders__Customer__5BE2A6F2">
+          <End Type="BikeStoresModel.Customer" Role="Customer" Multiplicity="0..1" />
+          <End Type="BikeStoresModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="Customer_Id" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="Customer_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Order_Ite__Order__619B8048">
+          <End Type="BikeStoresModel.Order" Role="Order" Multiplicity="0..1" />
+          <End Type="BikeStoresModel.Order_Items" Role="Order_Items" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="Order_Id" />
+            </Principal>
+            <Dependent Role="Order_Items">
+              <PropertyRef Name="Order_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Order_Status">
+          <End Type="BikeStoresModel.Order_Status" Role="Order_Status" Multiplicity="1" />
+          <End Type="BikeStoresModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order_Status">
+              <PropertyRef Name="Order_StatusId" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="Order_StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Orders__Staff_Id__5DCAEF64">
+          <End Type="BikeStoresModel.Staff" Role="Staff" Multiplicity="1" />
+          <End Type="BikeStoresModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Staff">
+              <PropertyRef Name="Staff_Id" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="Staff_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Orders__Store_Id__5CD6CB2B">
+          <End Type="BikeStoresModel.Store" Role="Store" Multiplicity="1" />
+          <End Type="BikeStoresModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Store">
+              <PropertyRef Name="Store_Id" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="Store_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BikeStoresModelStoreContainer" CdmEntityContainer="BikeStoresEntities">
+          <EntitySetMapping Name="Brands">
+            <EntityTypeMapping TypeName="BikeStoresModel.Brand">
+              <MappingFragment StoreEntitySet="Brands">
+                <ScalarProperty Name="Brand_Id" ColumnName="Brand_Id" />
+                <ScalarProperty Name="Brand_Name" ColumnName="Brand_Name" />
+                <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
+                <ScalarProperty Name="LastModifiedTs" ColumnName="LastModifiedTs" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="BikeStoresModel.Category">
+              <MappingFragment StoreEntitySet="Categories">
+                <ScalarProperty Name="Category_Id" ColumnName="Category_Id" />
+                <ScalarProperty Name="Category_Name" ColumnName="Category_Name" />
+                <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
+                <ScalarProperty Name="LastModifiedTs" ColumnName="LastModifiedTs" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="BikeStoresModel.Customer">
+              <MappingFragment StoreEntitySet="Customers">
+                <ScalarProperty Name="Customer_Id" ColumnName="Customer_Id" />
+                <ScalarProperty Name="First_Name" ColumnName="First_Name" />
+                <ScalarProperty Name="Last_Name" ColumnName="Last_Name" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Street" ColumnName="Street" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="State_Name" ColumnName="State_Name" />
+                <ScalarProperty Name="Zip_Code" ColumnName="Zip_Code" />
+                <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
+                <ScalarProperty Name="LastModifiedTs" ColumnName="LastModifiedTs" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Order_Items">
+            <EntityTypeMapping TypeName="BikeStoresModel.Order_Items">
+              <MappingFragment StoreEntitySet="Order_Items">
+                <ScalarProperty Name="Order_Id" ColumnName="Order_Id" />
+                <ScalarProperty Name="Item_Id" ColumnName="Item_Id" />
+                <ScalarProperty Name="Product_Id" ColumnName="Product_Id" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="List_Price" ColumnName="List_Price" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
+                <ScalarProperty Name="LastModifiedTs" ColumnName="LastModifiedTs" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="BikeStoresModel.Product">
+              <MappingFragment StoreEntitySet="Products">
+                <ScalarProperty Name="Product_Id" ColumnName="Product_Id" />
+                <ScalarProperty Name="Product_Name" ColumnName="Product_Name" />
+                <ScalarProperty Name="Brand_Id" ColumnName="Brand_Id" />
+                <ScalarProperty Name="Category_Id" ColumnName="Category_Id" />
+                <ScalarProperty Name="Model_Year" ColumnName="Model_Year" />
+                <ScalarProperty Name="List_Price" ColumnName="List_Price" />
+                <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
+                <ScalarProperty Name="LastModifiedTs" ColumnName="LastModifiedTs" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Staffs">
+            <EntityTypeMapping TypeName="BikeStoresModel.Staff">
+              <MappingFragment StoreEntitySet="Staffs">
+                <ScalarProperty Name="Staff_Id" ColumnName="Staff_Id" />
+                <ScalarProperty Name="First_Name" ColumnName="First_Name" />
+                <ScalarProperty Name="Last_Name" ColumnName="Last_Name" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Store_Id" ColumnName="Store_Id" />
+                <ScalarProperty Name="Manager_Id" ColumnName="Manager_Id" />
+                <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
+                <ScalarProperty Name="LastModifiedTs" ColumnName="LastModifiedTs" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Stocks">
+            <EntityTypeMapping TypeName="BikeStoresModel.Stock">
+              <MappingFragment StoreEntitySet="Stocks">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Store_Id" ColumnName="Store_Id" />
+                <ScalarProperty Name="Product_Id" ColumnName="Product_Id" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
+                <ScalarProperty Name="LastModifiedTs" ColumnName="LastModifiedTs" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Stores">
+            <EntityTypeMapping TypeName="BikeStoresModel.Store">
+              <MappingFragment StoreEntitySet="Stores">
+                <ScalarProperty Name="Store_Id" ColumnName="Store_Id" />
+                <ScalarProperty Name="Store_Name" ColumnName="Store_Name" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Street" ColumnName="Street" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="State_Name" ColumnName="State_Name" />
+                <ScalarProperty Name="Zip_Code" ColumnName="Zip_Code" />
+                <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
+                <ScalarProperty Name="LastModifiedTs" ColumnName="LastModifiedTs" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Order_Status">
+            <EntityTypeMapping TypeName="BikeStoresModel.Order_Status">
+              <MappingFragment StoreEntitySet="Order_Status">
+                <ScalarProperty Name="LastModifiedTs" ColumnName="LastModifiedTs" />
+                <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
+                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+                <ScalarProperty Name="Order_StatusId" ColumnName="Order_StatusId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="BikeStoresModel.Order">
+              <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="LastModifiedTs" ColumnName="LastModifiedTs" />
+                <ScalarProperty Name="CreatedTs" ColumnName="CreatedTs" />
+                <ScalarProperty Name="Staff_Id" ColumnName="Staff_Id" />
+                <ScalarProperty Name="Store_Id" ColumnName="Store_Id" />
+                <ScalarProperty Name="Shipped_Date" ColumnName="Shipped_Date" />
+                <ScalarProperty Name="Required_Date" ColumnName="Required_Date" />
+                <ScalarProperty Name="Order_Date" ColumnName="Order_Date" />
+                <ScalarProperty Name="Order_StatusId" ColumnName="Order_StatusId" />
+                <ScalarProperty Name="Customer_Id" ColumnName="Customer_Id" />
+                <ScalarProperty Name="Order_Id" ColumnName="Order_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

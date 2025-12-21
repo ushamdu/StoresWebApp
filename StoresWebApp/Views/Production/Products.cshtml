@@ -1,0 +1,315 @@
+﻿@{
+    ViewBag.Title = "Products";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>Products</h2>*@
+
+<div class="page-inner">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Products Details</h4>
+                </div>
+                <div class="card-body">
+                    <a id="btnAdd" class="btn btn-success" style="margin-bottom:10px;float:right;">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i> Add New
+                    </a>
+                    <div class="table-responsive">
+                        <table id="dtProducts" class="display " style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Brand Name</th>
+                                    <th>Category Name</th>
+                                    <th>Model Year</th>
+                                    <th>Price</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Add/Edit Product popup window*@
+<div id="dvProductModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="hdrTitle">Add Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Product Name -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="control-label">Product Name</label>
+                        <input type="hidden" id="txtProductId" value="0" />
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="txtProductName" class="form-control" placeholder="Enter Product Name" required />
+                    </div>
+                </div>
+
+                <!-- Brand Name -->
+                <div class="row mt-md-3" style="margin-top:15px;">
+                    <div class="col-md-4">
+                        <label class="control-label">Brand Name</label>
+                    </div>
+                    <div class="col-md-6">
+                        <select id="ddlBrand" class="form-control select2"></select>
+                    </div>
+                </div>
+
+                <!-- Category Name -->
+                <div class="row mt-md-3" style="margin-top:15px;">
+                    <div class="col-md-4">
+                        <label class="control-label">Category Name</label>
+                    </div>
+                    <div class="col-md-6">
+                        <select id="ddlCategory" class="form-control select2"></select>
+                    </div>
+                </div>
+
+                <!--Model Year -->
+                <div class="row mt-md-3" style="margin-top:15px;">
+                    <div class="col-md-4">
+                        <label class="control-label">Model Year</label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="txtModelYr" class="form-control" placeholder="Enter Model Year" required />
+                    </div>
+                </div>
+                <!--List Price -->
+                <div class="row mt-md-3" style="margin-top:15px;">
+                    <div class="col-md-4">
+                        <label class="control-label">Price</label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="txtPrice" class="form-control" placeholder="Enter Price" required />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="btnSave" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#ddlBrand').select2({
+                placeholder: 'Select Brand',
+                closeOnSelect: true,
+                dropdownParent: $('#dvProductModal'),
+                width: '100%'
+            });
+
+            $('#ddlCategory').select2({
+                placeholder: 'Select Categry',
+                closeOnSelect: true,
+                dropdownParent: $('#dvProductModal'),
+                width: '100%'
+            });
+
+            BindProducts();
+        });
+
+       function BindProducts() {
+          $.ajax({
+            url: '@Url.Action("GetProducts", "Production")',
+            type: 'GET',
+            success: function (response) {
+                console.log('Success : ', response.data);
+                var data = response.data;
+                if ($.fn.DataTable.isDataTable('#dtProducts')) {
+                    $('#dtProducts').DataTable().clear().destroy();
+                }
+
+                $('#dtProducts tbody').empty();
+
+                data.forEach(function (item) {
+                    $('#dtProducts tbody').append(`
+                        <tr>
+                            <td>${item.ProductName}</td>
+                            <td>${item.BrandName}</td>
+                            <td>${item.CategoryName}</td>
+                            <td>${item.ModelYear}</td>
+                            <td>${item.ListPrice}</td>
+                            <td>
+                                <button class ="btn btn-sm btn-info" onclick="EditProduct(${item.ProductId})">Edit</button>
+                                <button class ="btn btn-sm btn-danger" onclick="DeleteProduct(${item.ProductId})">Delete</button>
+                            </td>
+                        </tr>
+                    `);
+                });
+
+                $('#dtProducts').DataTable();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+     }
+
+   function BindBrands() {
+            $.ajax({
+            url: '@Url.Action("GetBrands", "Production")',
+            type: 'GET',
+            success: function (response) {
+                console.log('Success : ', response.data);
+                var data = response.data;
+
+                $('#ddlBrand').empty();
+                $('#ddlBrand').append($('<option></option>').val('0').html('Select'));
+                $.each(data, function (key, item) {
+                    $('#ddlBrand').append($('<option></option>').val(item.BrandId).html(item.BrandName));
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+          });
+        }
+
+        function BindCategory() {
+            $.ajax({
+                url: '@Url.Action("GetCategories","Production")',
+                type: 'GET',
+                success: function (response) {
+                    console.log('Success : ', response.data);
+                    var data = response.data;
+
+                    $('#ddlCategory').empty();
+                    $('#ddlCategory').append($('<option></option>').val('0').html('Select'));
+                    $.each(data, function (key, item) {
+                        $('#ddlCategory').append($('<option></option>').val(item.CategoryId).html(item.CategoryName));
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+        $('#btnAdd').click(function () {
+            clearForm();
+            BindBrands();
+            BindCategory();
+
+            $('#hdrTitle').text('Add Product');
+            $('#dvProductModal').modal('show');
+        });
+
+        function clearForm() {
+            $('#txtProductId').val('');
+            $('#txtProductName').val('');
+            $('#txtModelYr').val('');
+            $('#txtPrice').val('');
+        }
+
+        $("#txtPrice").on("keypress keyup blur", function (event) {
+            //this.value = this.value.replace(/[^0-9\.]/g,'');
+            $(this).val(
+                $(this)
+                    .val()
+                    .replace(/[^0-9\.]/g, ""),
+            );
+            if (
+                (event.which != 46 || $(this).val().indexOf(".") != -1) &&
+                (event.which < 48 || event.which > 57)
+            ) {
+                event.preventDefault();
+            }
+        });
+
+   $('#btnSave').click(function () {
+            if ($.trim($('#txtProductName').val()) == '') {
+                $('#txtProductName').addClass('is-invalid')
+            return;
+            }
+        
+          let price = parseFloat($('#txtPrice').val());
+          let formattedPrice = price.toFixed(2);
+
+        var product = {
+            productId: $('#txtProductId').val(),
+            productName: $('#txtProductName').val(),
+            brandId: $("#ddlBrand option:selected").val(),
+            categoryId: $('#ddlCategory option:selected').val(),
+            modelYear: $('#txtModelYr').val(),
+            listPrice: formattedPrice
+        };
+
+        $.ajax({
+            url: '@Url.Action("SaveProduct", "Production")',
+            type: 'POST',
+            data: product,
+            success: function (response) {
+                console.log(response);
+                var result = response.message;
+                if (result == 'Success') {
+                    clearForm();
+                    $('#dvProductModal').modal('hide');
+                    BindProducts();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+   });
+
+    $('.form-control').on('input', function () {
+        if ($(this).val().trim() !== '') {
+            $(this).removeClass('is-invalid');
+        }
+    });
+
+    $('#dvProductModal').on('shown.bs.modal', function () {
+        $(this).find('.is-invalid').removeClass('is-invalid');
+    });
+
+    function EditProduct(productId) {
+        clearForm();
+        BindBrands();
+        BindCategory();
+
+        $.ajax({
+            url: '@Url.Action("EditProduct", "Production")',
+            type: 'GET',
+            data: { 'productId': productId },
+            success: function (response) {
+                var data = response.data;
+                $('#txtProductId').val(data.ProductId);
+                $('#txtProductName').val(data.ProductName);
+
+                $('#ddlBrand').val(data.BrandId).trigger('change');
+                $('#ddlCategory').val(data.CategoryId).trigger('change');
+
+                $('#txtModelYr').val(data.ModelYear);
+                $('#txtPrice').val(data.ListPrice);
+
+                $('#hdrTitle').text('Edit Product');
+                $('#btnSave').text('Update Changes');
+                $('#dvProductModal').modal('show');
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+      }  
+
+    </script>
+    
+  }
+

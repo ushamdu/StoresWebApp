@@ -1,0 +1,332 @@
+﻿
+@{
+    ViewBag.Title = "Stores";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>Stores</h2>*@
+<div class="page-inner">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Stores Details</h4>
+                </div>
+                <div class="card-body">
+                    <a id="btnAdd" class="btn btn-success" style="margin-bottom:10px;float:right;">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i> Add New
+                    </a>
+                    <div class="table-responsive">
+                        <table id="dtStore" class="display " style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>Store Name</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Street</th>
+                                    <th>City</th>
+                                    <th>State Name</th>
+                                    <th>Zip Code</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Add/Edit Stores popup window*@
+<div id="dvStoreModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="hdrTitle">Add Store</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Store Name -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="control-label">Store Name</label>
+                        <input type="hidden" id="txtStoreId" value="0" />
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="txtStoreName" class="form-control" placeholder="Enter Store Name" required />
+                    </div>
+                </div>
+
+                <!-- Phone -->
+                <div class="row mt-md-3" style="margin-top:15px;">
+                    <div class="col-md-4">
+                        <label class="control-label">Phone</label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="txtPhone" class="form-control" placeholder="Enter Phone Number" required />
+                        <div class="invalid-feedback">Phone number is required</div>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="row mt-md-3" style="margin-top:15px;">
+                    <div class="col-md-4">
+                        <label class="control-label">Email</label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="txtEmail" class="form-control" placeholder="Enter Email" required />
+                        <div class="invalid-feedback">Enter a valid email address</div>
+                    </div>
+                </div>
+
+                <!--Street -->
+                <div class="row mt-md-3" style="margin-top:15px;">
+                    <div class="col-md-4">
+                        <label class="control-label">Street</label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="txtStreet" class="form-control" placeholder="Enter Street" required />
+                    </div>
+                </div>
+
+                <!--City -->
+                <div class="row mt-md-3" style="margin-top:15px;">
+                    <div class="col-md-4">
+                        <label class="control-label">City</label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="txtCity" class="form-control" placeholder="Enter City" required />
+                    </div>
+                </div>
+
+                <!--State Name -->
+                <div class="row mt-md-3" style="margin-top:15px;">
+                    <div class="col-md-4">
+                        <label class="control-label">State Name</label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="txtStateName" class="form-control" placeholder="Enter State Name" required />
+                    </div>
+                </div>
+
+                <!--Zip Code -->
+                <div class="row mt-md-3" style="margin-top:15px;">
+                    <div class="col-md-4">
+                        <label class="control-label">Zip Code</label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="txtZipCode" class="form-control" placeholder="Enter Zip Code" required />
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="btnSave" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            BindStores();
+        });
+
+    function BindStores() {
+          $.ajax({
+            url: '@Url.Action("GetAllStores", "Sales")',
+            type: 'GET',
+            success: function (response) {
+                console.log('Success : ', response.data);
+                var data = response.data;
+                if ($.fn.DataTable.isDataTable('#dtStore')) {
+                    $('#dtStore').DataTable().clear().destroy();
+                }
+
+                $('#dtStore tbody').empty();
+
+                data.forEach(function (item) {
+                    $('#dtStore tbody').append(`
+                        <tr>
+                            <td>${item.StoreName}</td>
+                            <td>${item.Phone}</td>
+                            <td>${item.Email}</td>
+                            <td>${item.Street}</td>
+                            <td>${item.City}</td>
+                            <td>${item.StateName}</td>
+                            <td>${item.ZipCode}</td>
+                            <td>
+                                <button class ="btn btn-sm btn-info" onclick="EditStore(${item.StoreId})">Edit</button>
+                                <button class ="btn btn-sm btn-danger" onclick="DeleteStore(${item.StoreId})">Delete</button>
+                            </td>
+                        </tr>
+                    `);
+                });
+
+                $('#dtStore').DataTable();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+      }
+
+      $('#btnAdd').click(function () {
+            clearForm();
+            $('#hdrTitle').text('Add Store');
+            $('#dvStoreModal').modal('show');
+        });
+
+        function clearForm() {
+            //txtCustomerId  txtFirstName txtLastName txtPhone txtEmail txtStreet txtCity txtStateName txtZipCode
+            $('#txtStoreId').val('');
+            $('#txtStoreName').val('');          
+            $('#txtPhone').val('');
+            $('#txtEmail').val('');
+            $('#txtStreet').val('');
+            $('#txtCity').val('');
+            $('#txtStateName').val('');
+            $('#txtZipCode').val('');
+        }
+
+        $('#btnSave').click(function () {
+
+            var flag = ValidateStore();
+
+            if (!flag)
+                return;
+
+        var store = {
+            storeId: $('#txtStoreId').val(),
+            storeName: $('#txtStoreName').val(),
+            phone: $('#txtPhone').val(),
+            email: $('#txtEmail').val(),
+            street: $('#txtStreet').val(),
+            city: $('#txtCity').val(),
+            stateName: $('#txtStateName').val(),
+            zipCode: $('#txtZipCode').val()
+        };
+
+        $.ajax({
+            url: '@Url.Action("SaveStore", "Sales")',
+            type: 'POST',
+            data: store,
+            success: function (response) {
+                console.log(response);
+                var result = response.message;
+                debugger;
+                if (result == 'Success') {
+                    clearForm();
+                    $('#dvStoreModal').modal('hide');
+                    BindCustomers();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+      });
+
+    function ValidateStore() {
+        var flag = true;
+
+        if ($.trim($('#txtStoreName').val()) == '') {
+            $('#txtStoreName').addClass('is-invalid')
+            flag = false;
+        }    
+
+        if ($.trim($('#txtEmail').val()) == '') {
+            $('#txtEmail').addClass('is-invalid')
+            flag = false;
+        }
+        else {
+            var regex = /^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            var email = $.trim($('#txtEmail').val());
+            var validEmail = regex.test(email);
+            if (!validEmail) {
+                $('#txtEmail').addClass('is-invalid')
+                flag = false;
+            }
+            else
+                $(this).removeClass('is-invalid');
+        }
+
+        if ($.trim($('#txtStreet').val()) == '') {
+            $('#txtStreet').addClass('is-invalid')
+            flag = false;
+        }
+
+        if ($.trim($('#txtCity').val()) == '') {
+            $('#txtCity').addClass('is-invalid')
+            flag = false;
+        }
+
+        if ($.trim($('#txtStateName').val()) == '') {
+            $('#txtStateName').addClass('is-invalid')
+            flag = false;
+        }
+
+        if ($.trim($('#txtZipCode').val()) == '') {
+            $('#txtZipCode').addClass('is-invalid')
+            flag = false;
+        }
+
+        return flag;
+    }
+
+    $('#txtPhone').on('input', function () {
+        this.value = this.value.replace(/[^0-9()\-\s]/g, '');
+
+        if (this.value.length > 0) {
+            $(this).removeClass('is-invalid');
+        }
+    });
+
+    $('.form-control').on('input', function () {
+        if ($(this).val().trim() !== '') {
+            $(this).removeClass('is-invalid');
+        }
+    });
+
+    $('#dvStoreModal').on('shown.bs.modal', function () {
+        $(this).find('.is-invalid').removeClass('is-invalid');
+    });
+
+    function EditStore(storeId) {
+       clearForm();
+        $.ajax({
+            url: '@Url.Action("EditStore", "Sales")',
+            type: 'GET',
+            data: { 'storeId': storeId },
+            success: function (response) {
+                var data = response.data;
+                debugger;
+                $('#txtStoreId').val(data.StoreId);
+                $('#txtStoreName').val(data.StoreName);            
+                $('#txtPhone').val(data.Phone);
+                $('#txtEmail').val(data.Email);
+                $('#txtStreet').val(data.Street);
+                $('#txtCity').val(data.City);
+                $('#txtStateName').val(data.StateName);
+                $('#txtZipCode').val(data.ZipCode);
+
+                $('#hdrTitle').text('Edit Staff');
+                $('#btnSave').text('Update Changes');
+                $('#dvStoreModal').modal('show');
+            }
+        });
+    }
+
+    function DeleteStore(storeId) {
+
+    }
+
+    </script>
+
+
+}
