@@ -1,0 +1,4 @@
+# Ignore CSS, Ks, and HTML from languare stats
+*.CSS linguist-detectable=false
+*.js linguist-detectable=false
+*.html linguist-detectable=false
